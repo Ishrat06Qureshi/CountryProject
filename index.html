@@ -3,43 +3,64 @@
 	<head>
 		<link rel="stylesheet" href="sass/main.css" />
 	</head>
-	<body>
-		<div class="slide-container">
-			<div class="wrapper">
-				<div class="clash-card barbarian">
-					<div class="clash-card__level clash-card__level--barbarian">
-						Level 4
-					</div>
-					<div class="clash-card__unit-name">The Barbarian</div>
-					<div class="clash-card__unit-description">
-						The Barbarian is a kilt-clad Scottish warrior with an angry,
-						battle-ready expression, hungry for destruction. He has Killer
-						yellow horseshoe mustache.
-					</div>
-
-					<div
-						class="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix"
-					>
-						<div class="one-third">
-							<div class="stat">natinality</div>
-							<div class="stat-value">Training</div>
-						</div>
-
-						<div class="one-third">
-							<div class="stat">16</div>
-							<div class="stat-value">Speed</div>
-						</div>
-
-						<div class="one-third no-border">
-							<div class="stat">150</div>
-							<div class="stat-value">Cost</div>
-						</div>
-					</div>
-				</div>
-				<!-- end clash-card barbarian-->
-			</div>
-			<!-- end wrapper -->
-		</div>
+	<body id="body-id">
+		<div id="container"></div>
 		<!-- end container -->
+		<script>
+			const fetchData = async (url) => {
+				const response = await fetch(url);
+				const data = await response.json();
+				return data;
+			};
+			window.addEventListener('load', () => {
+				fetchData('https://restcountries.com/v3.1/name/nepal')
+					.then((result) => {
+						const data = result[0];
+						console.log(data.flags.png);
+						const innerHtml = `<div class="slide-container">
+            <div class="wrapper">
+                <div class="clash-card barbarian">
+                    <div class="clash-card__level clash-card__level--barbarian">
+                        ${data.name.common || ''}
+                    </div>
+                    <div class="clash-card__unit-description">
+                        <img src="${data.flags.png}" class="flag-img"/>
+                    </div>
+
+                    <div
+                        class="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix"
+                    >
+                        <div class="one-third">
+                            <div class="stat">Nationality</div>
+                            <div class="stat-value">${
+															data.capital[0] || ''
+														}</div>
+                        </div>
+
+                        <div class="one-third">
+                            <div class="stat">Currency</div>
+                            <div class="stat-value">${
+															data.currencies.NPR.name || ''
+														}</div>
+                        </div>
+
+                        <div class="one-third no-border">
+                            <div class="stat">Languages</div>
+                            <div class="stat-value">${data.languages.nep}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end clash-card barbarian-->
+            </div>
+            <!-- end wrapper -->
+        </div>`;
+						const container = document.getElementById('container');
+						container.insertAdjacentHTML('afterbegin', innerHtml);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			});
+		</script>
 	</body>
 </html>
